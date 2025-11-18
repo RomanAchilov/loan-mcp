@@ -11,39 +11,55 @@ const server = new McpServer({
   version: "1.0.0",
 });
 
-const resourceOrigin = (() => {
-  try {
-    return new URL(config.baseURL).origin;
-  } catch {
-    return "http://localhost:3000";
+// Функция для получения базового URL из request или env
+const getRequestBaseURL = () => {
+  // В Vercel эта переменная доступна
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}/`;
   }
-})();
+  // Fallback для других окружений
+  if (process.env.VITE_APP_URL) {
+    return process.env.VITE_APP_URL;
+  }
+  return config.baseURL;
+};
 
 server.registerResource(
   "show-loan-html",
   "ui://widget/show-loan.html",
   {},
-  async () => ({
-    contents: [
-      {
-        uri: "ui://widget/show-loan.html",
-        mimeType: "text/html+skybridge",
-        text: `
-<link rel="stylesheet" href="${config.baseURL}chatgpt-widget.css">
+  async () => {
+    const baseURL = getRequestBaseURL();
+    const resourceOrigin = (() => {
+      try {
+        return new URL(baseURL).origin;
+      } catch {
+        return "http://localhost:3000";
+      }
+    })();
+
+    return {
+      contents: [
+        {
+          uri: "ui://widget/show-loan.html",
+          mimeType: "text/html+skybridge",
+          text: `
+<link rel="stylesheet" href="${baseURL}chatgpt-widget.css">
 <div id="tanstack-app-root"></div>
-<script src="${config.baseURL}chatgpt-widget.js"></script>
-        `.trim(),
-        _meta: {
-          "openai/widgetDomain": "https://chatgpt.com",
-          "openai/widgetDescription": "Displays a loan product with styling",
-          "openai/widgetCSP": {
-            connect_domains: [resourceOrigin],
-            resource_domains: [resourceOrigin],
+<script src="${baseURL}chatgpt-widget.js"></script>
+          `.trim(),
+          _meta: {
+            "openai/widgetDomain": "https://chatgpt.com",
+            "openai/widgetDescription": "Displays a loan product with styling",
+            "openai/widgetCSP": {
+              connect_domains: [resourceOrigin],
+              resource_domains: [resourceOrigin],
+            },
           },
         },
-      },
-    ],
-  })
+      ],
+    };
+  }
 );
 
 server.registerTool(
