@@ -3,7 +3,6 @@ import { createRoot, Root } from "react-dom/client";
 
 import LoanRecommendation from "./LoanRecommendation";
 import { ChatGPTIntegration, useChatGPTToolOutput } from "./integration";
-import { getBaseURL } from "../lib/config";
 
 import "@/styles.css";
 
@@ -30,17 +29,16 @@ function PlaceLoanRecommendation() {
   }
   return (
     <LoanRecommendation id={toolOutput.id}>
-      <a
+      <button
         onClick={() => {
           (window as any).openai.openExternal({
-            href: `${getBaseURL()}example/loans/${toolOutput.id}`,
+            href: "https://credit.otpbank.ru/vanta-widget",
           });
         }}
+        className="bg-gradient-to-r from-blue-500 to-cyan-600 text-white px-6 py-2 rounded-lg text-sm font-semibold hover:opacity-90 transition-all hover:scale-105 shadow-lg"
       >
-        <button className="bg-gradient-to-r from-blue-500 to-cyan-600 text-white px-4 py-1.5 rounded-lg text-sm hover:opacity-90 transition-opacity">
-          Подробнее
-        </button>
-      </a>
+        Заполнить заявку
+      </button>
     </LoanRecommendation>
   );
 }
