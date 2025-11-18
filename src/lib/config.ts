@@ -1,10 +1,12 @@
 export const getBaseURL = () => {
   if (import.meta.env.DEV) {
-    return "http://localhost:3000";
+    return "http://localhost:3000/";
   }
   return (
     import.meta.env.VITE_APP_URL ||
-    "https://ts-chatgptapp-production.up.railway.app/"
+    import.meta.env.VERCEL_URL 
+      ? `https://${import.meta.env.VERCEL_URL}/`
+      : "/"
   );
 };
 
