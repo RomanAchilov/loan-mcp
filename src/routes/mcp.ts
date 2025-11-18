@@ -13,14 +13,21 @@ const server = new McpServer({
 
 // Функция для получения базового URL из request или env
 const getRequestBaseURL = () => {
-  // В Vercel эта переменная доступна
-  if (process.env.VERCEL_URL) {
-    return `https://${process.env.VERCEL_URL}/`;
-  }
-  // Fallback для других окружений
+  // Приоритет: VITE_APP_URL (из Vercel env vars) > production URL > VERCEL_URL > fallback
   if (process.env.VITE_APP_URL) {
     return process.env.VITE_APP_URL;
   }
+  
+  // В Vercel используем production URL если это production деплой
+  if (process.env.VERCEL_ENV === 'production' && process.env.VERCEL_PROJECT_PRODUCTION_URL) {
+    return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}/`;
+  }
+  
+  // Fallback на обычный VERCEL_URL для preview деплоев
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}/`;
+  }
+  
   return config.baseURL;
 };
 
