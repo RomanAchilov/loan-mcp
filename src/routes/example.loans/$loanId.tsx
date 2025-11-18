@@ -56,13 +56,12 @@ function RouteComponent() {
         </div>
       </div>
 
-      <div className="absolute top-0 right-0 w-[55%] h-full z-0">
-        <div className="w-full h-full overflow-hidden rounded-2xl border-4 border-blue-500/30 shadow-2xl">
-          <img
-            src={`/${loan.image}`}
-            alt={loan.name}
-            className="w-full h-full object-cover"
-          />
+      <div className="absolute top-0 right-0 w-[55%] h-full z-0 flex items-center justify-center">
+        <div className="w-full h-[80%] overflow-hidden rounded-2xl border-4 border-blue-500/30 shadow-2xl bg-gradient-to-br from-blue-800/30 to-cyan-800/30 backdrop-blur-sm flex items-center justify-center">
+          <div className="text-center text-gray-400">
+            <div className="text-6xl mb-4">💳</div>
+            <div className="text-xl font-semibold">{loan.name}</div>
+          </div>
         </div>
       </div>
     </div>
